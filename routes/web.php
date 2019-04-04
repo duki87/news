@@ -32,7 +32,15 @@ Route::prefix('admin')->group(function() {
   Route::get('/logout', 'Auth\AdminLoginController@logout')->name('admin.logout');
 
   //Super admin routes
-  //Route::get('/add-admin', 'Auth\AdminLoginController@logout')->name('admin.add-admin');
+  Route::get('/add-admin', 'AdminController@create')->name('admin.add-admin');
+  Route::get('/admins', 'AdminController@admins')->name('admin.admins');
+  Route::post('/add-admin', 'AdminController@store')->name('admin.store-admin');
+
+  //Admin reset password routes
+  Route::post('/password/email', 'Auth\AdminForgotPasswordController@sendResetLinkEmail')->name('admin.password.email');
+  Route::get('/password/reset', 'Auth\AdminForgotPasswordController@showLinkRequestForm')->name('admin.password.request');
+  Route::post('/password/reset', 'Auth\AdminResetPasswordController@reset')->name('admin.password.update');
+  Route::get('/password/reset/{token}', 'Auth\AdminResetPasswordController@showResetForm')->name('admin.password.reset');
 
   //Category routes
   Route::get('/categories', 'CategoryController@index')->name('admin.categories');
