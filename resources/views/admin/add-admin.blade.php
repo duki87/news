@@ -12,6 +12,14 @@
           </button>
         </div>
         @endif
+
+        @if(count($errors))
+                 <ul class="alert alert-danger">
+                     @foreach($errors->all() as $error)
+                        <li>{{$error}}</li>
+                      @endforeach
+                 </ul>
+        @endif
         <form action="{{route('admin.store-admin')}}" method="post">
           @csrf
             <div class="card">
@@ -21,25 +29,25 @@
                 <div class="card-body">
                   <div class="form-group">
                     <label for="formGroupExampleInput">Име и презиме</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Име и презиме" required>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Име и презиме" required>
                   </div>
                   <div class="form-group">
                     <label for="formGroupExampleInput2">Е-маил</label>
-                    <input type="text" class="form-control" id="email" name="email" placeholder="Е-маил" required>
+                    <input type="text" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="Е-маил" required>
                   </div>
                   <div class="form-group">
                     <label for="formGroupExampleInput2">Изаберите занимање</label>
-                    <select class="custom-select custom-select-lg mb-3" name="job" id="job" required>
-                      <option selected>Изаберите</option>
-                      <option value="journalist">Новинар</option>
-                      <option value="editor">Уредник</option>
-                      <option value="director">Директор</option>
-                      <option value="marketing">Маркетинг</option>
+                    <select class="custom-select custom-select-lg mb-3" name="job" id="job" value="{{ old('job') }}" required>
+                      <option>Изаберите</option>
+                      <option {{ old('job') == 'journalist' ? 'selected':'' }} value="journalist">Новинар</option>
+                      <option {{ old('job') == 'editor' ? 'selected':'' }} value="editor">Уредник</option>
+                      <option {{ old('job') == 'director' ? 'selected':'' }} value="director">Директор</option>
+                      <option {{ old('job') == 'marketing' ? 'selected':'' }} value="marketing">Маркетинг</option>
                     </select>
                   </div>
                   <div class="form-group">
                     <div class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" name="super_admin" id="super_admin">
+                      <input type="checkbox" class="custom-control-input" name="super_admin" id="super_admin" {{ old('super_admin') == true ? 'checked':'' }}>
                       <label class="custom-control-label" for="super_admin">Супер админ</label>
                     </div>
                   </div>

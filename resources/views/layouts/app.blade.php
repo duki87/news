@@ -15,6 +15,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -65,12 +66,15 @@
                           <?php if(Auth::user()->super_admin == 1) { ?>
                              <li class="nav-item dropdown">
                                   <a id="navbarDropdown" class="nav-link dropdown-toggle " href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                      Супер Админ <span class="caret"></span>
+                                      Администратори <span class="caret"></span>
                                   </a>
 
                                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                       <a class="dropdown-item" href="{{route('admin.add-admin')}}">
-                                          Додај кориснике
+                                          Додај администратора
+                                      </a>
+                                      <a class="dropdown-item" href="{{route('admin.admins')}}">
+                                          Сви администратори
                                       </a>
                                   </div>
                               </li>

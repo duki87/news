@@ -35,6 +35,8 @@ Route::prefix('admin')->group(function() {
   Route::get('/add-admin', 'AdminController@create')->name('admin.add-admin');
   Route::get('/admins', 'AdminController@admins')->name('admin.admins');
   Route::post('/add-admin', 'AdminController@store')->name('admin.store-admin');
+  Route::get('/edit-admin/{id}', 'AdminController@edit')->name('admin.edit-admin');
+  Route::get('/change-admin-status/{id}', 'AdminController@change_status')->name('admin.change-admin-status');
 
   //Admin reset password routes
   Route::post('/password/email', 'Auth\AdminForgotPasswordController@sendResetLinkEmail')->name('admin.password.email');

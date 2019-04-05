@@ -7,7 +7,10 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\Admin;
 use Notification;
+use Validator;
+use Auth;
 use App\Notifications\AddAdminNotification;
+use Illuminate\Support\Facades\Input;
 
 class AdminController extends Controller
 {
@@ -33,23 +36,39 @@ class AdminController extends Controller
 
     public function create()
     {
-        return view('admin.add-admin');
+        if(Auth::user()->super_admin == 1) {
+          return view('admin.add-admin');
+        } else {
+          return redirect()->back()->with(['error_message' => 'Немате овлашћење да користите овај део сајта!']);
+        }
     }
 
     public function admins()
     {
-        return view('admin.add-admin');
+        if(Auth::user()->super_admin == 1) {
+          $admins = Admin::paginate(4);
+          return view('admin.admins')->with(['admins' => $admins]);
+        } else {
+          return redirect()->back()->with(['error_message' => 'Немате овлашћење да користите овај део сајта!']);
+        }
     }
 
     public function store(Request $request)
     {
-        $check = Admin::where(['email' => $request->email])->first();
-        if($check) {
-          return redirect()->back()->with(['admin_message_err' => 'Дошло је до грешке! Е-маил који сте унели већ користи други корисник.']);
-        }
         $super = false;
         if($request->super_admin == true) {
           $super = true;
+        }
+        $validator = Validator::make($request->all(), [
+           'email' => 'required|email|unique:admins|max:255',
+           'name' => 'required',
+           'job' => 'required'
+       ]);
+       if($validator->fails()) {
+            return redirect()
+                    ->back()
+                    ->withErrors($validator)
+                    ->withInput(Input::all());
         }
         $password = Str::random(12);
         $hash = Hash::make($password);
@@ -67,4 +86,24 @@ class AdminController extends Controller
           return redirect()->back()->with(['admin_message_err' => 'Дошло је до грешке!']);
         }
     }
+
+    public function edit($id) {
+      if(Auth::user()->super_admin == 1) {
+        $admin = Admin::where(['id' => $id])->first();
+        return view('admin.edit-admin')->with(['admin' => $admin]);
+      } else {
+        return redirect()->back()->with(['error_message' => 'Немате овлашћење да користите овај део сајта!']);
+      }
+    }
+
+    public function change_status($id) {
+      $admin = Admin::where(['id' => $id])->first();
+      if($admin->super_admin == 1) {
+        Admin::where(['id' => $id])->update(['super_admin' => 0]);
+      } else {
+        Admin::where(['id' => $id])->update(['super_admin' => 1]);
+      }
+      return redirect()->back()->with(['admin_message' => 'Статус администратора је успешно промењен!']);
+    }
+
 }
