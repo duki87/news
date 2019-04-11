@@ -14,7 +14,22 @@
           <li><a href="#"><i class="ion-social-twitter"></i></a></li>
           <li><a href="#"><i class="ion-social-google"></i></a></li>
           <li><a href="#"><i class="ion-social-instagram"></i></a></li>
-          <li><a class="pl-0 pl-sm-10" href="{{route('login')}}"><i class="fas fa-sign-in-alt"></i> Пријави се</a></li>
+          <?php if(!Auth::check()) { ?>
+          <li>
+            <a class="pl-0 pl-sm-10" href="{{route('login')}}"><i class="fas fa-sign-in-alt"></i> Пријави се</a>
+          </li>
+        <?php } else { ?>
+          <li>
+            <a class="pl-0 pl-sm-10" href=""
+               onclick="event.preventDefault();
+                             document.getElementById('logout-form').submit();">
+                Одајави се
+            </a>
+            <form id="logout-form" action="{{ route('user.logout') }}" method="GET" style="display: none;">
+                @csrf
+            </form>
+          </li>
+        <?php } ?>
         </ul>
 
       </div><!-- top-menu -->

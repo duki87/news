@@ -18,7 +18,7 @@
     </button>
   </div>
   @endif
-  <h2>Администратори</h2>
+  <h2 class=" d-inline">Администратори</h2> <a type="button" name="button" class="btn btn-primary text-white d-inline float-right mb-2" href="{{route('admin.add-admin')}}">Додај администратора</a>
   <br>
   <table class="table table-striped">
     <caption>Листа свих администратора</caption>
@@ -40,7 +40,7 @@
         <td><a href="{{route('admin.change-admin-status', $admin->id)}}" type="button" class="btn btn-{{$admin->super_admin == 1 ? 'success' : 'warning'}}" name="button">{{$admin->super_admin == 1 ? 'Да' : 'Не'}}</a></td>
         <td>
           <a type="button" class="btn btn-primary" name="button" href="{{route('admin.edit-admin', $admin->id)}}"><i class="fas fa-edit"></i></a>
-          <button type="button" class="btn btn-danger" name="button"><i class="fas fa-trash"></i></button>
+          <a type="button" class="btn btn-danger" name="button" onclick="return confirm('Да ли сте сигурни да желите да обришете овог администратора?')" href="{{route('admin.remove-admin', $admin->id)}}"><i class="fas fa-trash"></i></a>
         </td>
       </tr>
       @endforeach

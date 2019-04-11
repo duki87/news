@@ -46,7 +46,7 @@ class AdminController extends Controller
     public function admins()
     {
         if(Auth::user()->super_admin == 1) {
-          $admins = Admin::paginate(4);
+          $admins = Admin::where('id', '!=', auth()->id())->paginate(5);
           return view('admin.admins')->with(['admins' => $admins]);
         } else {
           return redirect()->back()->with(['error_message' => 'Немате овлашћење да користите овај део сајта!']);
@@ -87,7 +87,8 @@ class AdminController extends Controller
         }
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
       if(Auth::user()->super_admin == 1) {
         $admin = Admin::where(['id' => $id])->first();
         return view('admin.edit-admin')->with(['admin' => $admin]);
@@ -96,14 +97,33 @@ class AdminController extends Controller
       }
     }
 
-    public function change_status($id) {
+    public function change_status($id)
+    {
       $admin = Admin::where(['id' => $id])->first();
-      if($admin->super_admin == 1) {
-        Admin::where(['id' => $id])->update(['super_admin' => 0]);
+      if(Auth::user()->super_admin == 1) {
+        if($admin->super_admin == 1) {
+          Admin::where(['id' => $id])->update(['super_admin' => 0]);
+        } else {
+          Admin::where(['id' => $id])->update(['super_admin' => 1]);
+        }
+        return redirect()->back()->with(['admin_message' => 'Статус администратора је успешно промењен!']);
       } else {
-        Admin::where(['id' => $id])->update(['super_admin' => 1]);
+        return redirect()->back()->with(['error_message' => 'Немате овлашћење да користите овај део сајта!']);
       }
-      return redirect()->back()->with(['admin_message' => 'Статус администратора је успешно промењен!']);
+    }
+
+    public function remove($id)
+    {
+      if(Auth::user()->super_admin == 1) {
+        $admin = Admin::where(['id' => $id])->delete();
+        if($admin) {
+          return redirect()->back()->with(['admin_message' => 'Администратор је уклоњен!']);
+        } else {
+          return redirect()->back()->with(['admin_message' => 'Администратор је уклоњен!']);
+        }
+      } else {
+        return redirect()->back()->with(['error_message' => 'Немате овлашћење да користите овај део сајта!']);
+      }
     }
 
 }

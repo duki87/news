@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/', 'IndexController@index')->name('start');
 
 Auth::routes();
 
@@ -21,6 +19,10 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('index');
 //User auth routes
 Route::get('/users/logout', 'Auth\LoginController@userLogout')->name('user.logout');
+
+//Category routes
+// Route::get('/{parent_url}', 'IndexController@get_parent_category')->name('front.parent');
+// Route::get('/{parent_url}/{child_url}', 'IndexController@get_child_category')->name('front.child');
 
 //ADMIN ROUTES
 Route::prefix('admin')->group(function() {
@@ -36,6 +38,7 @@ Route::prefix('admin')->group(function() {
   Route::get('/admins', 'AdminController@admins')->name('admin.admins');
   Route::post('/add-admin', 'AdminController@store')->name('admin.store-admin');
   Route::get('/edit-admin/{id}', 'AdminController@edit')->name('admin.edit-admin');
+  Route::get('/remove-admin/{id}', 'AdminController@remove')->name('admin.remove-admin');
   Route::get('/change-admin-status/{id}', 'AdminController@change_status')->name('admin.change-admin-status');
 
   //Admin reset password routes
@@ -46,5 +49,8 @@ Route::prefix('admin')->group(function() {
 
   //Category routes
   Route::get('/categories', 'CategoryController@index')->name('admin.categories');
-  Route::get('/add-category', 'CategoryController@create')->name('admin.add-category');
+  Route::post('/create-category', 'CategoryController@store')->name('admin.create-category');
+  Route::get('/remove-category/{id}', 'CategoryController@destroy')->name('admin.remove-category');
+  Route::get('/edit-category/{id}', 'CategoryController@edit')->name('admin.edit-category');
+  Route::post('/update-category', 'CategoryController@update')->name('admin.update-category');
 });

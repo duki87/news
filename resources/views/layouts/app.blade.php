@@ -9,15 +9,13 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
     <!-- Styles -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -34,19 +32,26 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                      <li class="nav-item dropdown">
-                          <a id="navbarDropdown" class="nav-link dropdown-toggle " href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                      <?php if(Auth::check() && Auth::user()->super_admin == 1) { ?>
+                         <li class="nav-item dropdown">
+                              <a id="navbarDropdown" class="nav-link dropdown-toggle " href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Администратори <span class="caret"></span>
+                              </a>
+
+                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                  <a class="dropdown-item" href="{{route('admin.add-admin')}}">
+                                      Додај администратора
+                                  </a>
+                                  <a class="dropdown-item" href="{{route('admin.admins')}}">
+                                      Сви администратори
+                                  </a>
+                              </div>
+                          </li>
+                        <?php } ?>
+                      <li class="nav-item">
+                          <a href="{{ route('admin.categories') }}" class="nav-link">
                               Категорије<span class="caret"></span>
                           </a>
-
-                          <div class="dropdown-menu dropdown-menu" aria-labelledby="navbarDropdown">
-                              <a class="dropdown-item" href="{{ route('admin.categories') }}">
-                                Све категорије
-                              </a>
-                              <a class="dropdown-item" href="{{ route('admin.add-category') }}">
-                                 Додај категорију
-                              </a>
-                          </div>
                       </li>
                     </ul>
 
@@ -63,35 +68,20 @@
                                 </li>
                             @endif
                         @else
-                          <?php if(Auth::user()->super_admin == 1) { ?>
-                             <li class="nav-item dropdown">
-                                  <a id="navbarDropdown" class="nav-link dropdown-toggle " href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                      Администратори <span class="caret"></span>
-                                  </a>
 
-                                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                      <a class="dropdown-item" href="{{route('admin.add-admin')}}">
-                                          Додај администратора
-                                      </a>
-                                      <a class="dropdown-item" href="{{route('admin.admins')}}">
-                                          Сви администратори
-                                      </a>
-                                  </div>
-                              </li>
-                            <?php } ?>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle " href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                    <a class="dropdown-item" href=""
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    <form id="logout-form" action="{{ route('admin.logout') }}" method="GET" style="display: none;">
                                         @csrf
                                     </form>
                                 </div>
@@ -106,5 +96,13 @@
             @yield('content')
         </main>
     </div>
+    <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
+
+    <script src="{{asset('js/popper.min.js')}}"></script>
+
+    <script src="{{asset('bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    @yield('custom-js')
 </body>
 </html>
