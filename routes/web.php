@@ -53,4 +53,10 @@ Route::prefix('admin')->group(function() {
   Route::get('/remove-category/{id}', 'CategoryController@destroy')->name('admin.remove-category');
   Route::get('/edit-category/{id}', 'CategoryController@edit')->name('admin.edit-category');
   Route::post('/update-category', 'CategoryController@update')->name('admin.update-category');
+
+  //News routes
+  Route::get('/news', 'NewsController@index')->name('admin.all-news');
+  Route::get('/add-news', 'NewsController@create')->name('admin.add-news');
+  Route::post('/add-news', 'NewsController@store')->name('admin.store-news');
+  Route::post('/upload-news-photo', 'NewsController@upload')->name('admin.upload-news-photo');
 });

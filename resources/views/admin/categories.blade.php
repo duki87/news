@@ -41,7 +41,7 @@
         <td class="text-center">{{ $category->url }}</td>
         <td class="text-center">
           <a type="button" class="btn btn-primary edit text-white" id="{{ $category->id }}" name="button" data-toggle="modal" data-target="#editCatModal"><i class="fas fa-edit"></i></a>
-          <a type="button" class="btn btn-danger" name="button" onclick="return confirm('Да ли сте сигурни да желите да обришете овог администратора?')" href="{{route('admin.remove-category', $category->id)}}"><i class="fas fa-trash"></i></a>
+          <a type="button" class="btn btn-danger" name="button" onclick="return confirm('Да ли сте сигурни да желите да обришете ову категорију?')" href="{{route('admin.remove-category', $category->id)}}"><i class="fas fa-trash"></i></a>
         </td>
       </tr>
       @endforeach

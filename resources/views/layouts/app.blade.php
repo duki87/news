@@ -7,7 +7,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- <title>{{ config('app.name', 'Laravel') }}</title> -->
+    <title>Новости Администрација</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -53,6 +54,20 @@
                               Категорије<span class="caret"></span>
                           </a>
                       </li>
+                      <li class="nav-item dropdown">
+                           <a id="navbarDropdown" class="nav-link dropdown-toggle " href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                               Вести <span class="caret"></span>
+                           </a>
+
+                           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                               <a class="dropdown-item" href="{{route('admin.add-news')}}">
+                                   Додај вест
+                               </a>
+                               <a class="dropdown-item" href="{{route('admin.all-news')}}">
+                                   Све вести
+                               </a>
+                           </div>
+                       </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
