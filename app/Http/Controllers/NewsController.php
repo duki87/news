@@ -9,6 +9,7 @@ use DB;
 use Validator;
 use Storage;
 use Illuminate\Support\Facades\File;
+use Image;
 
 class NewsController extends Controller
 {
@@ -55,7 +56,7 @@ class NewsController extends Controller
               $validatorArr[] = $err[0];
             }
             return response()->json([
-              'err' => $validatorArr
+              'errors' => $validatorArr
             ], 500);
         }
         else
@@ -64,27 +65,9 @@ class NewsController extends Controller
         }
     }
 
-    public function upload(Request $request)
+    public function destroy(News $news)
     {
-        $validatorErrors = array();
-        $images = $request->file('photos');
-        foreach($images as $image)
-        {
-          $validator = Validator::make(
-             array('photos' => $image),
-             array('photos' => 'required|mimes:jpeg,png,jpg,gif|image|max:2000')
-          );
-          $tmp_name = $image->getClientOriginalName();
-          $extension = $image->getClientOriginalExtension();
-          if($validator->fails()) {
-            $validatorErrors[] = $tmp_name.'.'.$extension.' => '.$validator->getMessageBag()->first();
-            //continue;
-          }
-        }
-        if(count($validatorErrors) > 0) {
-          return response()->json(['errors' => $validatorErrors], 500);
-        }
-        return response()->json(['success' => 'Фотографије су успешно додате.'], 200);
+        //
     }
 
     public function show(News $news)
@@ -121,8 +104,5 @@ class NewsController extends Controller
      * @param  \App\News  $news
      * @return \Illuminate\Http\Response
      */
-    public function destroy(News $news)
-    {
-        //
-    }
+
 }

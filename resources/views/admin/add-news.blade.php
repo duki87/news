@@ -35,12 +35,17 @@
       <label for="validationDefault03">Текст вести</label>
       <textarea id="text">Унесите текст вести и обликујте га помоћу доступних опција</textarea>
 
-    <div class="form-row">
-      <div class="col-md-12 mb-3 mt-3">
-        <label for="keywords">Фотографије</label> <br>
-        <button type="button" name="button" class="btn btn-secondary text-white btn-sm" onclick="triggerFileInput()">Додај фотографијe</button>
-        <input type="file" multiple class="form-control d-none" name="photos" id="photos">
+      <div class="form-row">
+        <div class="col-md-12 mb-3 mt-3">
+          <label for="keywords">Фотографије</label> <br>
+          <button type="button" name="button" class="btn btn-secondary text-white btn-sm" onclick="triggerFileInput()">Додај фотографијe</button>
+          <input type="file" multiple class="form-control d-none" name="photos" id="photos">
+          <input type="hidden" name="folder" id="folder" value="">
+        </div>
       </div>
+    </div>
+    <div class="row" id="preview">
+
     </div>
     <button class="btn btn-primary mt-3" type="submit">Објави вест</button>
   </form>
@@ -53,8 +58,13 @@
   <script>tinymce.init({selector:'textarea'});</script>
   <script type="text/javascript" src="{{asset('js/add-news.js')}}"></script>
   <script type="text/javascript">
+    $(window).on('beforeunload', function() {
+      return confirm('Да ли сте сигурни да желите да затворите? Подаци неће бити сачувани.');
+      //destroyFolder();
+    });
     function triggerFileInput() {
       $('#photos').trigger('click');
     }
+
   </script>
 @endsection

@@ -55,6 +55,11 @@ return [
             'visibility' => 'public',
         ],
 
+        'news_images_uploads' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/news_images/',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
