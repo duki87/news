@@ -38,9 +38,11 @@
       <div class="form-row">
         <div class="col-md-12 mb-3 mt-3">
           <label for="keywords">Фотографије</label> <br>
-          <button type="button" name="button" class="btn btn-secondary text-white btn-sm" onclick="triggerFileInput()">Додај фотографијe</button>
+          <button type="button" name="button" class="btn btn-info text-white btn-sm" onclick="triggerFileInput()">Додај фотографијe</button>
+          <button type="button" class="btn btn-danger btn-sm text-white d-none" onclick="destroyFolder()" name="clear_photos" id="clear_photos">Обриши све учитане фотографијe</button>
           <input type="file" multiple class="form-control d-none" name="photos" id="photos">
           <input type="hidden" name="folder" id="folder" value="">
+          <input type="hidden" name="cover" id="cover" value="">
         </div>
       </div>
     </div>
@@ -54,9 +56,8 @@
 
 @section('custom-js')
   <!-- Main Quill library -->
-  <script src="https://cloud.tinymce.com/5/tinymce.min.js"></script>
+  <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=cfvkot7yk42a8trelrzb513elw32ppzhae0mlfut3liw62mw"></script>
   <script>tinymce.init({selector:'textarea'});</script>
-  <script type="text/javascript" src="{{asset('js/add-news.js')}}"></script>
   <script type="text/javascript">
     $(window).on('beforeunload', function() {
       return confirm('Да ли сте сигурни да желите да затворите? Подаци неће бити сачувани.');
@@ -65,6 +66,41 @@
     function triggerFileInput() {
       $('#photos').trigger('click');
     }
-
+    function destroyFolder() {
+      const folder = $('#folder').val();
+      $.ajaxSetup({
+         headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+      $.ajax({
+         url: "delete-news-photo-folder/"+folder,
+         type: "DELETE",
+         //data: img,
+         contentType: false,
+         cache: false,
+         processData: false,
+         success: function(response) {
+            console.log(response);
+            $('#clear_photos').addClass('d-none');
+            $('#preview').html('');
+            $('#folder').val('');
+            let message =
+            '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
+              '<strong>ИНФО</strong> Све учитане фотографије су успешно обрисане!'+
+              '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                '<span aria-hidden="true">&times;</span>'+
+              '</button>'
+            '</div>';
+            $('#news_message').html(message);
+            $('#cover').val('');
+            return 'FOLDER_REMOVED';
+           },
+           error: function(res, status, error) {
+             console.log(res);
+          }
+       });
+    }
   </script>
+  <script type="text/javascript" src="{{asset('js/add-news.js')}}"></script>
 @endsection

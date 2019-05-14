@@ -60,5 +60,5 @@ Route::prefix('admin')->group(function() {
   Route::post('/add-news', 'NewsController@store')->name('admin.store-news');
   Route::post('/upload-news-photo', 'NewsImageController@create')->name('admin.upload-news-photo');
   Route::delete('/delete-news-photo/{folder}/{image}', 'NewsImageController@destroy')->name('admin.delete-news-photo');
-  Route::delete('/delete-news-photo/{folder}', 'NewsImageController@destroyFolder')->name('admin.delete-news-photo-folder');
+  Route::delete('/delete-news-photo-folder/{folder}', 'NewsImageController@destroyFolder')->name('admin.delete-news-photo-folder');
 });

@@ -7,7 +7,28 @@ $(document).ready(function() {
     formData.append('category', $('#category').val());
     formData.append('author', $('#author').val());
     formData.append('keywords', $('#keywords').val());
+    formData.append('cover', $('#cover').val());
     formData.append('body', $('#text').html());
+
+    let images = []; //DELETE AFTER TESTING
+    let files = $('.add-cover');
+
+    for(let x=0; x<files.length; x++) {
+      let img = files.eq(x).attr('data-img');
+      let img_title = $('.img-title').eq(x).val();
+      let img_author = $('.img-author').eq(x).val();
+      let img_description = $('.img-description').eq(x).val();
+      let img_data = {
+        image: img,
+        title: img_title,
+        author: img_author,
+        description: img_description
+      }
+      images.push(img_data); //DELETE AFTER TESTING
+      //formData.append('images[]', img_data);
+      formData.append('images[]', img_data);
+    }
+    console.log(images); //DELETE AFTER TESTING
 
     $.ajaxSetup({
        headers: {
@@ -132,6 +153,8 @@ $(document).ready(function() {
             elem.closest('.card').parent().remove();
             if($('.cards').length < 1) {
               $('#folder').val('');
+              $('#cover').val('');
+              $('#clear_photos').addClass('d-none');
             }
           },
           error: function(res, status, error) {
@@ -147,43 +170,35 @@ $(document).ready(function() {
       });
     });
 
-    function destroyFolder() {
+    $(document).on('click', '.add-cover', function(e) {
       e.preventDefault();
-      const folder = $('#folder').val();
-      $.ajaxSetup({
-         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          }
-      });
-      $.ajax({
-         url: "delete-news-photo-folder/"+folder,
-         type: "DELETE",
-         //data: img,
-         contentType: false,
-         cache: false,
-         processData: false,
-         success: function(response) {
-            console.log(response);
-           },
-           error: function(res, status, error) {
-             console.log(res);
-          }
-       });
-    }
+      if($('.news-cover-photo').length >= 1) {
+        $('.add-cover').removeClass('news-cover-photo');
+        $('.add-cover').removeClass('btn-success');
+        $('.add-cover').addClass('btn-secondary');
+        $('#cover').val('');
+      }
+      $(this).removeClass('btn-secondary');
+      $(this).addClass('news-cover-photo');
+      $(this).addClass('btn-success');
+      let cover = $(this).attr('data-img');
+      $('#cover').val(cover);
+    });
 
    function previewPhotos(folder, images) {
      for(let image of images) {
        let card = '<div class="col-md-3 mt-2 cards"><div class="card">'+
                       '<img class="card-img-top" style="object-fit:cover" width="100%" height="150px" src="'+image+'" alt="">'+
                       '<ul class="list-group list-group-flush">'+
-                        '<li class="list-group-item"><input type="text" name="" class="form-control img-title" value="" placeholder="Унесите назив фотографијe"></li>'+
-                        '<li class="list-group-item"><input type="text" name="" class="form-control img-author" value="" placeholder="Унесите аутора фотографијe"></li>'+
-                        '<li class="list-group-item"><input type="text" name="" class="form-control img-description" value="" placeholder="Унесите опис фотографијe"></li>'+
+                        '<li class="list-group-item"><input type="text" name="img_title[]" class="form-control img-title" value="" placeholder="Унесите назив фотографијe"></li>'+
+                        '<li class="list-group-item"><input type="text" name="img_author[]" class="form-control img-author" value="" placeholder="Унесите аутора фотографијe"></li>'+
+                        '<li class="list-group-item"><input type="text" name="img_description[]" class="form-control img-description" value="" placeholder="Унесите опис фотографијe"></li>'+
                         '<li class="list-group-item">Постави као насловну<a href="#" class="btn btn-secondary add-cover text-white float-right" data-img="'+image+'"><i class="fas fa-check"></i></a></li>'+
                         '<li class="list-group-item">Обриши<a href="#" class="btn btn-danger text-white float-right remove_img" data-img="'+image+'"><i class="fas fa-trash"></i></a></li>'+
                       '</ul>'+
                   '</div></div>';
          $('#preview').append(card);
+         $('#clear_photos').removeClass('d-none');
        }
    }
 });

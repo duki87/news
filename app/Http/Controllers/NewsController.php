@@ -61,7 +61,28 @@ class NewsController extends Controller
         }
         else
         {
-            return response()->json(['success' => 'Вест је успешно додата. Овде можете погледати како изгледа.'], 200);
+            $cover = '';
+            if($request->cover == '') {
+              //$cover = $request->cover[0]['image'];
+              $cover = 'cover';
+            } else {
+              $cover = $request->cover;
+            }
+            $url = strtolower($request->title);
+            $url = preg_replace('/[[:space:]]+/', '-', $url);
+            $news = new News();
+            $news->category = $request->category;
+            $news->title = $request->title;
+            $news->body = $request->body;
+            $news->keywords = $request->keywords;
+            $news->author = $request->author;
+            $news->cover = $cover;
+            $news->image_folder = 'folder'; //EDIT DB TABLE AND DELETE THIS COLUMN
+            $news->url = $url;
+            $save = $news->save();
+            if($save) {
+              return response()->json(['success' => 'Вест је успешно додата. Овде можете погледати како изгледа.'], 200);
+            }
         }
     }
 
