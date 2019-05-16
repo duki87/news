@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\News;
+use App\NewsImage;
 use Illuminate\Http\Request;
 use Validator;
 use Storage;

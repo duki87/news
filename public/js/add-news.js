@@ -9,26 +9,46 @@ $(document).ready(function() {
     formData.append('keywords', $('#keywords').val());
     formData.append('cover', $('#cover').val());
     formData.append('body', $('#text').html());
+    // var img_title = document.querySelectorAll('input[name*=img_title]');
+    // var img_path = document.querySelectorAll('input[name*=img_path]');
+    // var img_author = document.querySelectorAll('input[name*=img_author]');
+    // var img_description = document.querySelectorAll('input[name*=img_description]');
 
-    let images = []; //DELETE AFTER TESTING
-    let files = $('.add-cover');
-
-    for(let x=0; x<files.length; x++) {
-      let img = files.eq(x).attr('data-img');
-      let img_title = $('.img-title').eq(x).val();
-      let img_author = $('.img-author').eq(x).val();
-      let img_description = $('.img-description').eq(x).val();
-      let img_data = {
-        image: img,
-        title: img_title,
-        author: img_author,
-        description: img_description
-      }
-      images.push(img_data); //DELETE AFTER TESTING
-      //formData.append('images[]', img_data);
-      formData.append('images[]', img_data);
+    var img_title = $('.img-title');
+    var img_path = $('.img-path');
+    var img_author = $('.img-author');
+    var img_description = $('.img-description');
+    for(let i = 0; i < img_path.length; i++) {
+      //formData.append(img_title[i].name, img_title[i].value);
+      // console.log(img_title[i] + ' - ' + img_title[i].value);
+      // console.log(img_author[i] + ' - ' + img_author[i].value);
+      // console.log(img_description[i] + ' - ' + img_description[i].value);
+      console.log(img_path[i].value);
+      formData.append('img_title[]', img_title[i].value == undefined ? '' : img_title[i].value);
+      formData.append('img_path[]', img_path[i].value);
+      formData.append('img_author[]', img_author[i].value == undefined ? '' : img_author[i].value);
+      formData.append('img_description[]', img_description[i].value == undefined ? '' : img_description[i].value);
     }
-    console.log(images); //DELETE AFTER TESTING
+
+    // let images = []; //DELETE AFTER TESTING
+    // let files = $('.add-cover');
+    //
+    // for(let x=0; x<files.length; x++) {
+    //   let img = files.eq(x).attr('data-img');
+    //   let img_title = $('.img-title').eq(x).val();
+    //   let img_author = $('.img-author').eq(x).val();
+    //   let img_description = $('.img-description').eq(x).val();
+    //   let img_data = {
+    //     image: img,
+    //     title: img_title,
+    //     author: img_author,
+    //     description: img_description
+    //   }
+    //   images.push(img_data); //DELETE AFTER TESTING
+    //   //formData.append('images[]', img_data);
+    //   formData.append('images[]', img_data);
+    // }
+    // console.log(images); //DELETE AFTER TESTING
 
     $.ajaxSetup({
        headers: {
@@ -189,6 +209,7 @@ $(document).ready(function() {
      for(let image of images) {
        let card = '<div class="col-md-3 mt-2 cards"><div class="card">'+
                       '<img class="card-img-top" style="object-fit:cover" width="100%" height="150px" src="'+image+'" alt="">'+
+                      '<input type="hidden" name="img_path[]" value="'+image+'" class="img-path">'+
                       '<ul class="list-group list-group-flush">'+
                         '<li class="list-group-item"><input type="text" name="img_title[]" class="form-control img-title" value="" placeholder="Унесите назив фотографијe"></li>'+
                         '<li class="list-group-item"><input type="text" name="img_author[]" class="form-control img-author" value="" placeholder="Унесите аутора фотографијe"></li>'+

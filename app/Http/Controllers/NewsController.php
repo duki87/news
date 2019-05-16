@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\News;
+use App\NewsImage;
 use App\Category;
 use Illuminate\Http\Request;
 use DB;
@@ -21,7 +22,16 @@ class NewsController extends Controller
 
     public function index()
     {
-        return view('admin.news');
+        $news = News::paginate(10);
+        return view('admin.news')->with(['news' => $news]);
+    }
+
+    public function single_news($unique)
+    {
+        $arr = explode('-', $unique);
+        $id = $arr[count($arr)-1];
+        $news = News::where(['id' => $id])->first();
+        return view('admin.single-news')->with(['news' => $news]);
     }
 
     public function create()
@@ -63,11 +73,11 @@ class NewsController extends Controller
         {
             $cover = '';
             if($request->cover == '') {
-              //$cover = $request->cover[0]['image'];
-              $cover = 'cover';
+              $cover = $request->img_path[0];
             } else {
               $cover = $request->cover;
             }
+            $folder = explode('/', $cover)[6];
             $url = strtolower($request->title);
             $url = preg_replace('/[[:space:]]+/', '-', $url);
             $news = new News();
@@ -77,10 +87,19 @@ class NewsController extends Controller
             $news->keywords = $request->keywords;
             $news->author = $request->author;
             $news->cover = $cover;
-            $news->image_folder = 'folder'; //EDIT DB TABLE AND DELETE THIS COLUMN
+            $news->image_folder = $folder;
             $news->url = $url;
             $save = $news->save();
             if($save) {
+              foreach($request->img_path as $key => $value) {
+                  $image = new NewsImage();
+                  $image->news_id = $news->id;
+                  $image->destination = $request->img_path[$key];
+                  $image->title = $request->img_title[$key];
+                  $image->author = $request->img_author[$key];
+                  $image->description = $request->img_description[$key];
+                  $save_info = $image->save();
+              }
               return response()->json(['success' => 'Вест је успешно додата. Овде можете погледати како изгледа.'], 200);
             }
         }

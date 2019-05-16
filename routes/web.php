@@ -56,6 +56,7 @@ Route::prefix('admin')->group(function() {
 
   //News routes
   Route::get('/news', 'NewsController@index')->name('admin.all-news');
+  Route::get('/news/{unique}', 'NewsController@single_news')->name('admin.single-news');
   Route::get('/add-news', 'NewsController@create')->name('admin.add-news');
   Route::post('/add-news', 'NewsController@store')->name('admin.store-news');
   Route::post('/upload-news-photo', 'NewsImageController@create')->name('admin.upload-news-photo');
