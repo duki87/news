@@ -71,13 +71,6 @@ class NewsController extends Controller
         }
         else
         {
-            $cover = '';
-            if($request->cover == '') {
-              $cover = $request->img_path[0];
-            } else {
-              $cover = $request->cover;
-            }
-            $folder = explode('/', $cover)[6];
             $url = strtolower($request->title);
             $url = preg_replace('/[[:space:]]+/', '-', $url);
             $news = new News();
@@ -86,21 +79,14 @@ class NewsController extends Controller
             $news->body = $request->body;
             $news->keywords = $request->keywords;
             $news->author = $request->author;
-            $news->cover = $cover;
-            $news->image_folder = $folder;
+            $news->cover = 'default.jpg';
+            $news->image_folder = 'folder';
             $news->url = $url;
             $save = $news->save();
             if($save) {
-              foreach($request->img_path as $key => $value) {
-                  $image = new NewsImage();
-                  $image->news_id = $news->id;
-                  $image->destination = $request->img_path[$key];
-                  $image->title = $request->img_title[$key];
-                  $image->author = $request->img_author[$key];
-                  $image->description = $request->img_description[$key];
-                  $save_info = $image->save();
-              }
-              return response()->json(['success' => 'Вест је успешно додата. Овде можете погледати како изгледа.'], 200);
+              $id = $news->id;
+              $url = route('admin.add-images-to-news', $news->id);
+              return response()->json(['success' => 'NEWS_ADD', 'id' => $id, 'url' => $url], 200);
             }
         }
     }

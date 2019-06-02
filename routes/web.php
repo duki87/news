@@ -58,8 +58,10 @@ Route::prefix('admin')->group(function() {
   Route::get('/news', 'NewsController@index')->name('admin.all-news');
   Route::get('/news/{unique}', 'NewsController@single_news')->name('admin.single-news');
   Route::get('/add-news', 'NewsController@create')->name('admin.add-news');
+  Route::get('/add-images-to-news/{id}', 'NewsImageController@add_images_page')->name('admin.add-images-to-news');
+  Route::post('/add-news-images', 'NewsImageController@store')->name('admin.add-news-images');
   Route::post('/add-news', 'NewsController@store')->name('admin.store-news');
   Route::post('/upload-news-photo', 'NewsImageController@create')->name('admin.upload-news-photo');
   Route::delete('/delete-news-photo/{folder}/{image}', 'NewsImageController@destroy')->name('admin.delete-news-photo');
-  Route::delete('/delete-news-photo-folder/{folder}', 'NewsImageController@destroyFolder')->name('admin.delete-news-photo-folder');
+  Route::delete('/delete-news-photo-folder/{folder}', 'NewsImageController@destroyFolder')->name('admin.delete-news-photo-folder');  
 });

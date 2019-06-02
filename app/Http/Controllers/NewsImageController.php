@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\NewsImage;
+use App\News;
 use Illuminate\Http\Request;
 use Validator;
 use Storage;
@@ -14,6 +15,11 @@ class NewsImageController extends Controller
     public function __construct()
     {
        $this->middleware('auth:admin');
+    }
+
+    public function add_images_page($id) {
+        $news = News::where(['id' => $id])->first();
+        return view('admin.add-images')->with(['news' => $news]);
     }
 
     public function create(Request $request)
@@ -74,6 +80,30 @@ class NewsImageController extends Controller
           return response()->json(['success' => 'Фотографија је успешно oбрисана.'], 200);
         } else {
           return response()->json(['error' => 'Дошло је до грешке.'], 500);
+        }
+    }
+
+    public function store(Request $request)
+    {
+        $cover = '';
+        if($request->cover == '') {
+          $cover = $request->img_path[0];
+        } else {
+          $cover = $request->cover;
+        }
+
+        foreach($request->img_path as $key => $value) {
+            $image = new NewsImage();
+            $image->news_id = $request->news_id;
+            $image->destination = $request->img_path[$key];
+            $image->title = $request->img_title[$key];
+            $image->author = $request->img_author[$key];
+            $image->description = $request->img_description[$key];
+            $save_info = $image->save();
+        }
+        $update = News::where(['id' => $request->news_id])->update(['cover' => $cover]);
+        if($update) {
+          return redirect('/admin/news')->with(['news_message' => 'Фотографије су успешно додате!']);
         }
     }
 

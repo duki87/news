@@ -5,7 +5,14 @@
   <div class="" id="news_message"></div>
   <h2 class="d-inline">Управљање вестима</h2> <a href="{{route('admin.add-news')}}" type="button" name="button" class="btn btn-primary text-white d-inline float-right mb-2">Додај нову вест</a>
   <div class="my-4"></div>
-
+    @if(Session::has('news_message'))
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>ИНФО</strong> {{Session::get('news_message')}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    @endif
     <div class="row">
       <form class="row col-md-4" id="searchNews">
         <div class="form-group col-md-8">
