@@ -49,6 +49,7 @@ Route::prefix('admin')->group(function() {
 
   //Category routes
   Route::get('/categories', 'CategoryController@index')->name('admin.categories');
+  Route::get('/reset-cat-table', 'CategoryController@reset_table')->name('admin.reset-cat-table');
   Route::post('/create-category', 'CategoryController@store')->name('admin.create-category');
   Route::get('/remove-category/{id}', 'CategoryController@destroy')->name('admin.remove-category');
   Route::get('/edit-category/{id}', 'CategoryController@edit')->name('admin.edit-category');
@@ -56,12 +57,22 @@ Route::prefix('admin')->group(function() {
 
   //News routes
   Route::get('/news', 'NewsController@index')->name('admin.all-news');
+  //Route::get('/news', 'NewsController@index')->name('admin.all-news');
   Route::get('/news/{unique}', 'NewsController@single_news')->name('admin.single-news');
+  Route::get('/news/edit/{unique}', 'NewsController@edit')->name('admin.edit-news');
+  Route::put('/news/update/{id}', 'NewsController@update')->name('admin.update-news');
+  Route::post('/update-cover', 'NewsController@update_cover')->name('admin.update-cover');
+  Route::delete('/delete-news/{id}', 'NewsController@destroy')->name('admin.delete-news');
   Route::get('/add-news', 'NewsController@create')->name('admin.add-news');
   Route::get('/add-images-to-news/{id}', 'NewsImageController@add_images_page')->name('admin.add-images-to-news');
   Route::post('/add-news-images', 'NewsImageController@store')->name('admin.add-news-images');
   Route::post('/add-news', 'NewsController@store')->name('admin.store-news');
   Route::post('/upload-news-photo', 'NewsImageController@create')->name('admin.upload-news-photo');
-  Route::delete('/delete-news-photo/{folder}/{image}', 'NewsImageController@destroy')->name('admin.delete-news-photo');
-  Route::delete('/delete-news-photo-folder/{folder}', 'NewsImageController@destroyFolder')->name('admin.delete-news-photo-folder');  
+  Route::get('/edit-news-photos/{unique}', 'NewsImageController@edit')->name('admin.edit-news-photos');
+  Route::delete('/delete-news-photo/{folder}/{image}/{id}', 'NewsImageController@destroy')->name('admin.delete-news-photo');
+  Route::delete('/delete-news-photo-folder/{folder}/{news_id}', 'NewsImageController@destroyFolder')->name('admin.delete-news-photo-folder');
+  Route::put('/news/update-news-images/{id}', 'NewsImageController@update')->name('admin.update-news-images');
+
+  //Admin profiles
+  Route::get('/profiles/{id}', 'AdminController@profile')->name('admin.admin-profile');
 });

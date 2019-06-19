@@ -33,7 +33,8 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                      <?php if(Auth::check() && Auth::user()->super_admin == 1) { ?>
+                      <?php if(Auth::check()) { ?>
+                        <?php if(Auth::user()->super_admin == 1) { ?>
                          <li class="nav-item dropdown">
                               <a id="navbarDropdown" class="nav-link dropdown-toggle " href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   Администратори <span class="caret"></span>
@@ -68,6 +69,7 @@
                                </a>
                            </div>
                        </li>
+                       <?php } ?>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

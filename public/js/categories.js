@@ -32,6 +32,8 @@ $(document).ready(function() {
                '</button>'+
              '</div>';
            $('#ajax_message').append(message);
+           $('#addCat')[0].reset();
+           resetTable();
          }
        }
      });
@@ -70,4 +72,25 @@ $(document).ready(function() {
     $('#edit_url').val('');
     $('#selectParent > select > option[value="'+previousSelect+'"]').attr("selected", false);
   });
+
+  function resetTable() {
+    $.ajaxSetup({
+       headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+       }
+    });
+    $.ajax({
+       url: "reset-cat-table",
+       type: "get",
+       contentType: false,
+       cache: false,
+       processData: false,
+       success: function(result) {
+         $('#catData').html('');
+         $('#links').html('');
+         $('#catData').append(result.categoryData);
+         $('#links').html(result.categories);
+       }
+     });
+  }
 });

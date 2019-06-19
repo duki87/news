@@ -9,9 +9,12 @@ use Validator;
 use Storage;
 use Illuminate\Support\Facades\File;
 use Image;
+use App\Traits\ImagesTrait;
 
 class NewsImageController extends Controller
 {
+    use ImagesTrait;
+
     public function __construct()
     {
        $this->middleware('auth:admin');
@@ -19,7 +22,8 @@ class NewsImageController extends Controller
 
     public function add_images_page($id) {
         $news = News::where(['id' => $id])->first();
-        return view('admin.add-images')->with(['news' => $news]);
+        $url = route('admin.index');
+        return view('admin.add-images')->with(['news' => $news, 'url' => $url]);
     }
 
     public function create(Request $request)
@@ -55,9 +59,12 @@ class NewsImageController extends Controller
                     ->insert($watermark, 'bottom-left', 10, 10)
                     ->save('news_images/'.$directory.'/'.$name);
 
-            $imagesArray[] = url('/').'/news_images/'.$directory.'/'.$name;
-
+            $record = new NewsImage();
+            $record->news_id = $request->news_id;
+            $record->destination = url('/').'/news_images/'.$directory.'/'.$name;
+            $record->save();
         }
+        $imagesArray = NewsImage::where(['news_id' => $request->news_id])->orderBy('id','DESC')->take(count($images))->get();
         if(count($validatorErrors) > 0)
         {
           if(count($imagesArray) > 0)
@@ -69,46 +76,73 @@ class NewsImageController extends Controller
         return response()->json(['success' => 'Фотографије су успешно додате.', 'folder' => $directory, 'images' => $imagesArray], 201);
     }
 
-    public function destroy($folder, $image)
+    public function destroy($folder, $image, $id)
     {
         $remove = Storage::disk('news_images_uploads')->delete($folder.'/'.$image);
-        if($remove) {
+        $delete = NewsImage::where(['id' => $id])->delete();
+        if($delete && $remove) {
           $files = Storage::disk('news_images_uploads')->files($folder);
           if(count($files) < 1) {
             Storage::disk('news_images_uploads')->deleteDirectory($folder);
           }
           return response()->json(['success' => 'Фотографија је успешно oбрисана.'], 200);
-        } else {
-          return response()->json(['error' => 'Дошло је до грешке.'], 500);
         }
+        return response()->json(['error' => 'Дошло је до грешке.'], 500);
     }
 
     public function store(Request $request)
     {
-        $cover = '';
-        if($request->cover == '') {
-          $cover = $request->img_path[0];
+        if(count($request->img_path) > 0) {
+          $cover = '';
+          if($request->cover == '') {
+            $cover = $request->img_path[0];
+          } else {
+            $cover = $request->cover;
+          }
+
+          foreach($request->img_id as $key => $value) {
+              $image = NewsImage::where(['id' => $request->img_id[$key]])->update([
+                'title' => $request->img_title[$key],
+                'author' => $request->img_author[$key],
+                'description' => $request->img_description[$key]
+              ]);
+          }
+
+          $update = $this->updateNews($request->news_id, $cover, $request->folder);
+          if($update) {
+            return redirect('/admin/news')->with(['news_message' => ['content' => 'Фотографије су успешно додате!', 'alert' => 'success']]);
+          }
         } else {
-          $cover = $request->cover;
-        }
-
-        foreach($request->img_path as $key => $value) {
-            $image = new NewsImage();
-            $image->news_id = $request->news_id;
-            $image->destination = $request->img_path[$key];
-            $image->title = $request->img_title[$key];
-            $image->author = $request->img_author[$key];
-            $image->description = $request->img_description[$key];
-            $save_info = $image->save();
-        }
-        $update = News::where(['id' => $request->news_id])->update(['cover' => $cover]);
-        if($update) {
-          return redirect('/admin/news')->with(['news_message' => 'Фотографије су успешно додате!']);
+          return redirect('/admin/news')->with(['news_message' => ['content' => 'Вест је успешно додата!', 'alert' => 'success']]);
         }
     }
 
-    public function destroyFolder($folder)
+    public function edit($unique) {
+        $arr = explode('-', $unique);
+        $id = $arr[count($arr)-1];
+        $news = News::where(['id' => $id])->first();
+        if(Auth::id() == $news->author) {
+          $url = route('admin.index');
+          $images = NewsImage::where(['news_id' => $id])->get();
+          return view('admin.edit-news-images')->with(['images' => $images, 'title' => $news->title, 'folder' => $news->image_folder, 'cover' => $news->cover, 'url' => $url, 'id' => $news->id]);
+        }
+        return redirect('/admin/news')->with(['news_message' => ['alert' => 'danger', 'content' => 'Нисте овлашћени да мењате садржај ове вести!']]);
+    }
+
+    public function update(Request $request, $news_id) {
+      foreach($request->img_id as $key => $value) {
+          $image = NewsImage::where(['id' => $request->img_id[$key]])->update([
+            'title' => $request->img_title[$key],
+            'author' => $request->img_author[$key],
+            'description' => $request->img_description[$key]
+          ]);
+        }
+        return redirect('/admin/news')->with(['news_message' => ['content' => 'Фотографије су успешно измењене!', 'alert' => 'success']]);
+    }
+
+    public function destroyFolder($folder, $news_id)
     {
-        Storage::disk('news_images_uploads')->deleteDirectory($folder);
+        $this->destroyImageFolder($folder, $news_id);
     }
+
 }

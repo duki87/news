@@ -34,6 +34,12 @@ class AdminController extends Controller
         return view('admin.index');
     }
 
+    public function profile($id)
+    {
+        $admin = Admin::where(['id' => $id])->first();
+        return view('admin.admin-profile')->with(['admin' => $admin]);
+    }
+
     public function create()
     {
         if(Auth::user()->super_admin == 1) {
@@ -124,6 +130,11 @@ class AdminController extends Controller
       } else {
         return redirect()->back()->with(['error_message' => 'Немате овлашћење да користите овај део сајта!']);
       }
+    }
+
+    public static function get_author_name($id) {
+      $admin = Admin::where(['id' => $id])->first();
+      return $admin['name'];
     }
 
 }

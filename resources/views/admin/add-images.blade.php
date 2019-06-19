@@ -5,20 +5,21 @@
   <div class="" id="news_message">
 
   </div>
-  @if(Session::has('session_message'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <strong>ИНФО</strong> {{Session::get('session_message')}}
+  @if(Session::has('news_message'))
+    <div class="alert alert-{{Session::get('news_message.alert')}} alert-dismissible fade show" role="alert">
+      <strong>ИНФО</strong> {{Session::get('news_message.content')}}
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
   @endif
-  <h2 class="d-inline">Додај фотографије за вест: <strong>{{$news->title}}</strong> </h2>
+  <h2 class="d-inline">Додај фотографије за вест: <strong>{{utf8_decode($news->title)}}</strong> </h2>
   <br>
 
   <form id="" method="POST" enctype="multipart/form-data" action="{{route('admin.add-news-images')}}">
     @csrf
-    <input type="hidden" name="news_id" value="{{$news->id}}">
+    <input type="hidden" name="news_id" id="news_id" value="{{$news->id}}">
+    <input type="hidden" id="url" value="{{$url}}">
       <div class="form-row">
         <div class="col-md-12 mb-3 mt-3">
           <label for="keywords">Фотографије</label> <br>
@@ -39,21 +40,21 @@
 
 @section('custom-js')
 <script type="text/javascript">
-
     function triggerFileInput() {
       $('#photos').trigger('click');
     }
     function destroyFolder() {
       const folder = $('#folder').val();
+      let url = $('#url').val();
+      let news_id = $('#news_id').val();
       $.ajaxSetup({
          headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           }
       });
       $.ajax({
-         url: "delete-news-photo-folder/"+folder,
+         url: url+'/delete-news-photo-folder/'+folder+'/'+news_id,
          type: "DELETE",
-         //data: img,
          contentType: false,
          cache: false,
          processData: false,
@@ -87,6 +88,7 @@
         formData.append('photos[]', files[index]);
       }
       formData.append('folder', $('#folder').val());
+      formData.append('news_id', $('#news_id').val());
       var originUrl = (window.location.href).split('/').splice();
       console.log(originUrl);
       $.ajaxSetup({
@@ -144,14 +146,16 @@
        e.preventDefault();
        let arr = $(this).attr('data-img').split('/');
        const img = $('#folder').val() +'/'+ arr[arr.length-1];
+       let id = $(this).attr('data-id');
        var elem = $(this);
+       let url = $('#url').val();
        $.ajaxSetup({
           headers: {
              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
            }
        });
        $.ajax({
-          url: "delete-news-photo/"+img,
+          url: url+'/delete-news-photo/'+img+'/'+id,
           type: "DELETE",
           //data: img,
           contentType: false,
@@ -204,19 +208,20 @@
      function previewPhotos(folder, images) {
        for(let image of images) {
          let card = '<div class="col-md-3 mt-2 cards"><div class="card">'+
-                        '<img class="card-img-top" style="object-fit:cover" width="100%" height="150px" src="'+image+'" alt="">'+
-                        '<input type="hidden" name="img_path[]" value="'+image+'" class="img-path">'+
+                        '<img class="card-img-top" style="object-fit:cover" width="100%" height="150px" src="'+image.destination+'" alt="">'+
+                        '<input type="hidden" name="img_path[]" value="'+image.destination+'" class="img-path">'+
+                        '<input type="hidden" name="img_id[]" value="'+image.id+'" class="img-id">'+
                         '<ul class="list-group list-group-flush">'+
                           '<li class="list-group-item"><input type="text" name="img_title[]" class="form-control img-title" value="" placeholder="Унесите назив фотографијe"></li>'+
                           '<li class="list-group-item"><input type="text" name="img_author[]" class="form-control img-author" value="" placeholder="Унесите аутора фотографијe"></li>'+
                           '<li class="list-group-item"><input type="text" name="img_description[]" class="form-control img-description" value="" placeholder="Унесите опис фотографијe"></li>'+
-                          '<li class="list-group-item">Постави као насловну<a href="#" class="btn btn-secondary add-cover text-white float-right" data-img="'+image+'"><i class="fas fa-check"></i></a></li>'+
-                          '<li class="list-group-item">Обриши<a href="#" class="btn btn-danger text-white float-right remove_img" data-img="'+image+'"><i class="fas fa-trash"></i></a></li>'+
+                          '<li class="list-group-item">Постави као насловну<a href="#" class="btn btn-secondary add-cover text-white float-right" data-img="'+image.destination+'"><i class="fas fa-check"></i></a></li>'+
+                          '<li class="list-group-item">Обриши<a href="#" class="btn btn-danger text-white float-right remove_img" data-id="'+image.id+'" data-img="'+image.destination+'"><i class="fas fa-trash"></i></a></li>'+
                         '</ul>'+
                     '</div></div>';
            $('#preview').append(card);
            $('#clear_photos').removeClass('d-none');
-         }
+       }
      }
 </script>
 <script type="text/javascript" src="{{asset('js/add-news.js')}}"></script>

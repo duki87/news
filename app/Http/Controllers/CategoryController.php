@@ -25,6 +25,26 @@ class CategoryController extends Controller
         return view('admin.categories')->with(['categories' => $categories, 'parents' => $parents]);
     }
 
+    public function reset_table()
+    {
+        $categoryData = array();
+        $categories = Category::paginate(5);
+        $parents = Category::where(['parent' => 0])->get();
+        foreach ($categories as $category) {
+          $cat_name = $category->parent == 0 ? 'Главна категорија' : self::parent_name($category->parent);
+          $data = '<tr>';
+            $data .= '<td>'.$category->title.'</td>';
+            $data .= '<td class="text-center">'.$cat_name.'</td>';
+            $data .= '<td class="text-center">'.$category->url.'</td>';
+            $data .= '<td class="text-center">';
+              $data .= '<a type="button" class="btn btn-primary edit text-white" id="'.$category->id.'" name="button" data-toggle="modal" data-target="#editCatModal"><i class="fas fa-edit"></i></a>';
+              $data .= '<a type="button" class="btn btn-danger" name="button" onclick="return confirm(Да ли сте сигурни да желите да обришете ову категорију?)" href="'.route('admin.remove-category', $category->id).'"><i class="fas fa-trash"></i></a>';
+          $data .= '</tr>';
+          $categoryData[] = $data;
+        }
+        return response()->json(['success'=>'RESET', 'categories' => $categories->links(), 'parents' => $parents, 'categoryData' => $categoryData]);
+    }
+
     public function store(Request $request)
     {
         $category = new Category();

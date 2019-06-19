@@ -33,7 +33,7 @@
         <th class="text-center">Акције</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="catData">
       @foreach ($categories as $category)
       <tr>
         <td>{{ $category->title }}</td>
@@ -47,7 +47,10 @@
       @endforeach
     </tbody>
   </table>
-  {{ $categories->links() }}
+  <div id="links">
+    {{ $categories->links() }}
+  </div>
+
 
   <!-- ADD Modal -->
   <div class="modal" id="addCatModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">

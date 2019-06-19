@@ -30,7 +30,8 @@
       </div>
       <div class="col-md-4 mb-3">
         <label for="author">Аутор</label>
-        <input type="text" class="form-control" id="author" name="author" placeholder="Унесите аутора или ауторе">
+        <input type="text" class="form-control" id="author_name" name="author_name" placeholder="Унесите аутора или ауторе" value="{{ Auth::user()->name }}">
+        <input type="hidden" class="form-control" id="author" name="author" value="{{ Auth::user()->id }}">
       </div>
     </div>
     <div class="form-row">
@@ -52,7 +53,13 @@
 @section('custom-js')
   <!-- Main Quill library -->
   <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=cfvkot7yk42a8trelrzb513elw32ppzhae0mlfut3liw62mw"></script>
-  <script>tinymce.init({selector:'textarea'});</script>
+  <script>tinymce.init({
+      selector: 'textarea',
+      //entity_encoding : "raw",
+      height: 400,
+      toolbar: "image",
+      plugins: "image imagetools"
+  });</script>
   <script type="text/javascript">
     // $(window).on('beforeunload', function(e) {
     //   return confirm('Да ли сте сигурни да желите да затворите? Подаци неће бити сачувани.');
