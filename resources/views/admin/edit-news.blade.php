@@ -36,9 +36,18 @@
       </div>
     </div>
     <div class="form-row">
-      <div class="col-md-12 mb-3">
+      <div class="col-md-8 mb-3">
         <label for="keywords">Кључне речи за претрагу</label>
         <input type="text" class="form-control" name="keywords" id="keywords" placeholder="Унесите кључне речи за претрагу" value="{{utf8_decode($news->keywords)}}">
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="keywords">Приоритет</label>
+        <select class="form-control" name="priority" id="priority">
+          <option value="4" {{$news->priority == 4 ? 'selected' : ''}}>Изузетно важно</option>
+          <option value="3" {{$news->priority == 3 ? 'selected' : ''}}>Висок</option>
+          <option value="2" {{$news->priority == 2 ? 'selected' : ''}}>Средње</option>
+          <option value="1" {{$news->priority == 1 ? 'selected' : ''}}>Низак</option>
+        </select>
       </div>
     </div>
     <div class="">

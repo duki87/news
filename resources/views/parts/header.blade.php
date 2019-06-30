@@ -44,8 +44,8 @@
       <i class="close-icn ion-close"></i>
     </a>
     <div class="src-form">
-      <form>
-        <input type="text" placeholder="Search here">
+      <form action="" method="POST">
+        <input type="text" placeholder="Унесите кључне речи за претрагу">
         <button type="submit"><i class="ion-search"></i></a></button>
       </form>
     </div><!-- src-form -->
@@ -53,16 +53,19 @@
     <a class="menu-nav-icon" data-menu="#main-menu" href="#"><i class="ion-navicon"></i></a>
 
     <ul class="main-menu" id="main-menu">
-      <li><a href="02_archive-page.html">NEWS</a></li>
-      <li class="drop-down"><a href="03_single-post.html">GUIDES & ANALYTICS<i class="ion-arrow-down-b"></i></a>
+      @foreach($categories as $category)
+        <li class="drop-down"><a href="{{route('front.parent', $category->url)}}">{{$category->title}}<i class="ion-arrow-down-b"></i></a>
+          <ul class="drop-down-menu drop-down-inner">
+            {{App\Http\Controllers\IndexController::populate_child_categories($category->id)}}
+          </ul>
+        </li>
+      @endforeach
+      <!-- <li class="drop-down"><a href="03_single-post.html">GUIDES & ANALYTICS<i class="ion-arrow-down-b"></i></a>
         <ul class="drop-down-menu drop-down-inner">
           <li><a href="#">PAGE 1</a></li>
           <li><a href="#">PAGE 2</a></li>
         </ul>
-      </li>
-      <li><a href="04_FAQS.html">EVENTS</a></li>
-      <li><a href="05_FAQS-single.html">EXPLAINED</a></li>
-      <li><a href="06_contact-us.html">ICON CLAENDER</a></li>
+      </li> -->
     </ul>
     <div class="clearfix"></div>
   </div><!-- container -->

@@ -26,7 +26,7 @@ class NewsController extends Controller
 
     public function index()
     {
-        $news = News::paginate(10);
+        $news = News::paginate(5);
         return view('admin.news')->with(['news' => $news]);
     }
 
@@ -77,6 +77,7 @@ class NewsController extends Controller
             $news->cover = 'default.jpg';
             $news->image_folder = 'folder';
             $news->url = $url;
+            $news->priority = $request->priority;
             $save = $news->save();
             if($save) {
               $id = $news->id;
@@ -126,7 +127,8 @@ class NewsController extends Controller
           'body' => utf8_encode($request->body),
           'keywords' => utf8_encode($request->keywords),
           'author' => utf8_encode($request->author),
-          'url' => $url
+          'url' => $url,
+          'priority' => $request->priority
         ]);
         if($update) {
           return redirect()->route('admin.single-news', $url.'-'.$id);
@@ -185,7 +187,7 @@ class NewsController extends Controller
       $parentCategories = Category::where(['parent' => 0])->get();
       foreach($parentCategories as $parentCategory) {
         $selected = $parentCategory['id'] == $id ? 'selected' : '';
-        $categories .= '<option value="'.$parentCategory['id'].'" '.$selected.'>'.$parentCategory['title'].'</option>';
+        $categories .= '<option style="font-weight:bold" value="'.$parentCategory['id'].'" '.$selected.'><strong>'.$parentCategory['title'].'</strong></option>';
         $childCategories = Category::where(['parent' => $parentCategory['id']])->get();
         foreach($childCategories as $childCategory) {
           $selected = $childCategory['id'] == $id ? 'selected' : '';

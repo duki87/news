@@ -21,8 +21,8 @@ Route::get('/home', 'HomeController@index')->name('index');
 Route::get('/users/logout', 'Auth\LoginController@userLogout')->name('user.logout');
 
 //Category routes
-// Route::get('/{parent_url}', 'IndexController@get_parent_category')->name('front.parent');
-// Route::get('/{parent_url}/{child_url}', 'IndexController@get_child_category')->name('front.child');
+//Route::get('/{parent_url}', 'IndexController@get_parent_category')->name('front.parent');
+//Route::get('/{parent_url}/{child_url}', 'IndexController@get_child_category')->name('front.child');
 
 //ADMIN ROUTES
 Route::prefix('admin')->group(function() {
@@ -76,3 +76,7 @@ Route::prefix('admin')->group(function() {
   //Admin profiles
   Route::get('/profiles/{id}', 'AdminController@profile')->name('admin.admin-profile');
 });
+
+// Front Category routes
+Route::get('/{parent_url}', 'IndexController@get_parent_category')->name('front.parent');
+Route::get('/{parent_url}/{child_url}', 'IndexController@get_child_category')->name('front.child');

@@ -9,6 +9,7 @@ use Validator;
 use Storage;
 use Illuminate\Support\Facades\File;
 use Image;
+use Auth;
 use App\Traits\ImagesTrait;
 
 class NewsImageController extends Controller

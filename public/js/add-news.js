@@ -8,6 +8,7 @@ $(document).ready(function() {
     formData.append('author', $('#author').val());
     formData.append('keywords', $('#keywords').val());
     formData.append('body', $('#text').val());
+    formData.append('priority', $('#priority').val());
 
     $.ajaxSetup({
        headers: {
