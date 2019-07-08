@@ -75,8 +75,18 @@ Route::prefix('admin')->group(function() {
 
   //Admin profiles
   Route::get('/profiles/{id}', 'AdminController@profile')->name('admin.admin-profile');
+
+  //Poll routes
+  Route::get('/polls', 'PollController@index')->name('admin.all-polls');
+  Route::get('/add-poll', 'PollController@create')->name('admin.add-poll');
+  Route::post('/add-poll', 'AdminController@store')->name('admin.store-poll');
 });
 
 // Front Category routes
 Route::get('/{parent_url}', 'IndexController@get_parent_category')->name('front.parent');
 Route::get('/{parent_url}/{child_url}', 'IndexController@get_child_category')->name('front.child');
+
+//Route::get('/{parent_url}/{child_url}/{url}', 'IndexController@show_news')->name('front.show-news');
+
+Route::get('/{parent_url}/{child_url}/{url}', 'IndexController@show_news');
+Route::get('/{child_url}/{url}', 'IndexController@show_news');
