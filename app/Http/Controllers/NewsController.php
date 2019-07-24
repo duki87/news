@@ -122,13 +122,13 @@ class NewsController extends Controller
         $url = utf8_encode(strtolower($this->convert_characters($request->title)));
         $url = preg_replace('/[[:space:]]+/', '-', $url);
         $update = News::where(['id' => $id])->update([
-          'category' => $request->category,
-          'title' => utf8_encode($request->title),
-          'body' => utf8_encode($request->body),
-          'keywords' => utf8_encode($request->keywords),
-          'author' => utf8_encode($request->author),
-          'url' => $url,
-          'priority' => $request->priority
+            'category' => $request->category,
+            'title' => utf8_encode($request->title),
+            'body' => utf8_encode($request->body),
+            'keywords' => utf8_encode($request->keywords),
+            'author' => utf8_encode($request->author),
+            'url' => $url,
+            'priority' => $request->priority
         ]);
         if($update) {
           return redirect()->route('admin.single-news', $url.'-'.$id);

@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Like extends Model
 {
     protected $fillable = [
-        'name', 'email', 'password',
+        'comment', 'user',
     ];
+
+    public function user() {
+      return $this->belongsTo('App\User', 'user');
+    }
+
+    public function comment() {
+      return $this->belongsTo('App\Comment', 'comment');
+    }
 }

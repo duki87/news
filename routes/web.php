@@ -20,6 +20,10 @@ Route::get('/home', 'HomeController@index')->name('index');
 //User auth routes
 Route::get('/users/logout', 'Auth\LoginController@userLogout')->name('user.logout');
 
+//Comments
+Route::post('/add-comment', 'CommentController@create')->name('front.add-comment');
+Route::post('/like-comment', 'CommentController@like')->name('front.like-comment');
+
 //Category routes
 //Route::get('/{parent_url}', 'IndexController@get_parent_category')->name('front.parent');
 //Route::get('/{parent_url}/{child_url}', 'IndexController@get_child_category')->name('front.child');

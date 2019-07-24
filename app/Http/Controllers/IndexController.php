@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Category;
 use App\News;
+use App\Comment;
 use DB;
 
 class IndexController extends Controller
@@ -14,9 +15,9 @@ class IndexController extends Controller
     {
         $latest = News::where(['priority' => 4])->first();
         $featured = News::where('priority', '>=', '3')
-            //->orderBy('created_at', 'desc')
-            ->orderBy('priority', 'desc')
-            ->limit(6)->get();
+                          //->orderBy('created_at', 'desc')
+                          ->orderBy('priority', 'desc')
+                          ->limit(6)->get();
 
         $categories = Category::where(['parent' => 0])->get();
         return view('index')->with(['categories' => $categories, 'latest' => $latest, 'featured' => $featured]);
@@ -52,7 +53,20 @@ class IndexController extends Controller
       $arr = explode('-', $unique);
       $id = $arr[count($arr)-1];
       $news = News::where(['id' => $id])->with('images')->first();
-      return view('show-news')->with(['news' => $news]);
+      $comments = Comment::where(['news_id' => $news->id,'reply' => 0])->orderBy('created_at', 'desc')->with('user')->get();
+      $commentsArray = array();
+      foreach ($comments as $comment) {
+          $replies = Comment::where(['reply' => $comment->id])->orderBy('created_at', 'desc')->with('user')->get();
+          $commentsArray[] = $comment;
+          foreach ($replies as $reply) {
+              $commentsArray[] = $reply;
+          }
+      }
+      $categories = Category::where(['parent' => 0])->get();
+      $suggested = News::where(['category' => $news->category])
+                          ->orderBy('priority', 'desc')
+                          ->limit(3)->get();
+      return view('show-news')->with(['news' => $news, 'categories' => $categories, 'suggested_news' => $suggested, 'comments' => $commentsArray]);
     }
 
     public static function generate_news_url($id)
@@ -65,6 +79,12 @@ class IndexController extends Controller
         $parent = Category::where(['id' => $category->parent])->first();
         return '/'.$parent->url.'/'.$category->url.'/'.$news->url.'-'.$news->id;
       }
+    }
+
+    public static function get_category_name($id)
+    {
+      $category = Category::where(['id' => $id])->first();
+      return $category->title;
     }
 
     // public static function get_single_latest()
