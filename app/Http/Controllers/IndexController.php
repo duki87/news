@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use App\Category;
 use App\News;
 use App\Comment;
+use App\Reads;
 use DB;
+use Auth;
+use Session;
 
 class IndexController extends Controller
 {
@@ -53,7 +56,7 @@ class IndexController extends Controller
       $arr = explode('-', $unique);
       $id = $arr[count($arr)-1];
       $news = News::where(['id' => $id])->with('images')->first();
-      $comments = Comment::where(['news_id' => $news->id,'reply' => 0])->orderBy('created_at', 'desc')->with('user')->get();
+      $comments = Comment::where(['news_id' => $news->id,'reply' => 0])->orderBy('created_at', 'desc')->with('user')->with('likes')->get();
       $commentsArray = array();
       foreach ($comments as $comment) {
           $replies = Comment::where(['reply' => $comment->id])->orderBy('created_at', 'desc')->with('user')->get();
@@ -62,11 +65,34 @@ class IndexController extends Controller
               $commentsArray[] = $reply;
           }
       }
+      $this->add_read($news->id);
       $categories = Category::where(['parent' => 0])->get();
       $suggested = News::where(['category' => $news->category])
                           ->orderBy('priority', 'desc')
                           ->limit(3)->get();
       return view('show-news')->with(['news' => $news, 'categories' => $categories, 'suggested_news' => $suggested, 'comments' => $commentsArray]);
+    }
+
+    private function add_read($news)
+    {
+
+        if(!Auth::id()) {
+          $exist = Reads::where(['news' => $news, 'session' => Session::getId()])->first();
+          if($exist) {
+            return false;
+          }
+          $read = new Reads();
+          $read->news = $news;
+          $read->session = Session::getId();
+          $read->read = true;
+          $read->save();
+        }
+        $exist = Reads::where(['news' => $news, 'user' => Auth::id()])->first();
+        $read = new Reads();
+        $read->news = $news;
+        $read->user = Auth::id();
+        $read->read = true;
+        $read->save();
     }
 
     public static function generate_news_url($id)

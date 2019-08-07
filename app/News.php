@@ -15,6 +15,14 @@ class News extends Model
       return $this->hasMany('App\Comment', 'news_id');
     }
 
+    public function reads() {
+      return $this->hasMany('App\Reads', 'news');
+    }
+
+    public function polls() {
+      return $this->hasMany('App\Poll', 'news');
+    }
+
     protected $fillable = [
         'category', 'title', 'body', 'keywords', 'author', 'cover'
     ];

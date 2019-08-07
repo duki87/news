@@ -16,4 +16,5 @@
 
 @section('custom-js')
   <script type="text/javascript" src="{{asset('js/comment.js')}}"></script>
+  <script type="text/javascript" src="{{asset('js/news.js')}}"></script>
 @endsection

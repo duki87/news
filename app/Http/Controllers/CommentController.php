@@ -39,28 +39,6 @@ class CommentController extends Controller
         return response()->json(['response' => 'COMMENT_FAIL'], 500);
     }
 
-    public function like(Request $request)
-    {
-        $newLike = new Like();
-        if(Auth::check())
-        {
-          $like = Like::where(['comment' => $request->comment_id, 'user' => Auth::id()])->first();
-          if($like)
-          {
-              $like->delete();
-              return response()->json(['response' => 'UNLIKE'], 200);
-          }
-          $newLike->comment = $request->comment_id;
-          $newLike->user = Auth::id();
-          $newLike->save();
-          return response()->json(['response' => 'LIKE'], 200);
-        }
-        $newLike->comment = $request->comment_id;
-        $newLike->user = 0;
-        $newLike->save();
-        return response()->json(['response' => 'LIKE'], 200);
-    }
-
     public function show(Comment $comment)
     {
         //

@@ -451,6 +451,9 @@ header .main-menu li.drop-down a.mouseover + ul.drop-down-menu{ display: block;
 	border-radius: 2px; color: #111; }
 .btn-fill-grey:hover{ border: 1px solid #F9B500; background: none; color: #000; }
 
+.like-comment {
+
+}
 
 .btn-b-md{ font-size: .9em; height: 35px; line-height: 35px; }
 .btn-b-sm{ font-size: .9em; height: 30px; line-height: 28px; }

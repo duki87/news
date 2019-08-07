@@ -20,9 +20,12 @@ Route::get('/home', 'HomeController@index')->name('index');
 //User auth routes
 Route::get('/users/logout', 'Auth\LoginController@userLogout')->name('user.logout');
 
-//Comments
+//Comments and likes
 Route::post('/add-comment', 'CommentController@create')->name('front.add-comment');
-Route::post('/like-comment', 'CommentController@like')->name('front.like-comment');
+Route::post('/like-comment', 'LikeController@create')->name('front.like-comment');
+
+//Reads and shares
+Route::get('/add-read', 'ReadController@create')->name('front.add-read');
 
 //Category routes
 //Route::get('/{parent_url}', 'IndexController@get_parent_category')->name('front.parent');
@@ -83,7 +86,8 @@ Route::prefix('admin')->group(function() {
   //Poll routes
   Route::get('/polls', 'PollController@index')->name('admin.all-polls');
   Route::get('/add-poll', 'PollController@create')->name('admin.add-poll');
-  Route::post('/add-poll', 'AdminController@store')->name('admin.store-poll');
+  Route::post('/add-poll', 'PollController@store')->name('admin.create-poll');
+  Route::post('/populate-news', 'PollController@populate_news')->name('admin.populate-news');
 });
 
 // Front Category routes

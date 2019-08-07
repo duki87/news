@@ -65,11 +65,14 @@ $(document).ready(function() {
        success: function(res) {
          console.log(res.response);
          if(res.response == 'LIKE') {
-           $(this).removeClass('btn-brdr-grey');
-           $(this).addClass('btn-brdr-grey-active');
+           //$(this).removeClass('btn-brdr-grey');
+            //console.log($(this).hasClass('btn-brdr-grey'));
+           //$(this).addClass('btn-brdr-grey-active');
+           $('#comment'+comment_id).removeClass('btn-outline-success');
+           $('#comment'+comment_id).addClass('btn-success');
          } else {
-           $(this).addClass('btn-brdr-grey');
-           $(this).removeClass('btn-brdr-grey-active');
+           $('#comment'+comment_id).removeClass('btn-success');
+           $('#comment'+comment_id).addClass('btn-outline-success');
          }
        },
        error: function (res, status, error) {

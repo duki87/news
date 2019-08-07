@@ -4,16 +4,17 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Poll extends Model
+class PollOption extends Model
 {
+
     use Notifiable;
     protected $guard = 'admin';
     
     protected $fillable = [
-        'title', 'news', 'description'
+        'poll', 'option', 'results'
     ];
 
-    public function poll_options() {
-      return $this->hasMany('App\PollOption', 'poll');
+    public function votes() {
+      return $this->hasMany('App\Vote', 'vote');
     }
 }
