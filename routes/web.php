@@ -27,6 +27,10 @@ Route::post('/like-comment', 'LikeController@create')->name('front.like-comment'
 //Reads and shares
 Route::get('/add-read', 'ReadController@create')->name('front.add-read');
 
+//Polls and Votes
+Route::post('/add-vote', 'VoteController@store')->name('front.add-vote');
+Route::get('/get-poll-results/{id}', 'VoteController@show')->name('front.get-poll-results');
+
 //Category routes
 //Route::get('/{parent_url}', 'IndexController@get_parent_category')->name('front.parent');
 //Route::get('/{parent_url}/{child_url}', 'IndexController@get_child_category')->name('front.child');

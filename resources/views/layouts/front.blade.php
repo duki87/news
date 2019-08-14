@@ -42,7 +42,8 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
   	<script src="{{asset('js/tether.min.js')}}"></script>
   	<script src="{{asset('js/scripts.js')}}"></script>
-    @yield('custom-js')
+  @yield('custom-js')
+  @yield('footer')
 
   </body>
 </html>

@@ -7,6 +7,8 @@ use App\Category;
 use App\News;
 use App\Comment;
 use App\Reads;
+use App\Poll;
+use App\Votes;
 use DB;
 use Auth;
 use Session;
@@ -17,13 +19,15 @@ class IndexController extends Controller
     public function index()
     {
         $latest = News::where(['priority' => 4])->first();
+        //$poll = Poll::orderBy('created_at', 'desc')->with('votes')->limit(1)->get();
+        $poll = Poll::orderBy('created_at', 'desc')->with('votes')->limit(1)->get();
         $featured = News::where('priority', '>=', '3')
                           //->orderBy('created_at', 'desc')
                           ->orderBy('priority', 'desc')
                           ->limit(6)->get();
 
         $categories = Category::where(['parent' => 0])->get();
-        return view('index')->with(['categories' => $categories, 'latest' => $latest, 'featured' => $featured]);
+        return view('index')->with(['categories' => $categories, 'latest' => $latest, 'featured' => $featured, 'poll' => $poll]);
     }
 
     public function get_parent_category($url)

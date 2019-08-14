@@ -26,7 +26,8 @@ class CommentController extends Controller
             $comment->user = Auth::id();
             $comment->name = Auth::user()->name;
             $comment->email = Auth::user()->email;
-        } else
+        }
+        else
         {
             $comment->name = $request->name;
             $comment->email = $request->email;

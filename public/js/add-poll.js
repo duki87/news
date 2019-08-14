@@ -50,7 +50,9 @@ $(document).ready(function() {
        contentType: false,
        processData: false,
        success: function(res) {
-         console.log(res.news);
+         //console.log(res.news);
+         $('#news_by_category').html('');
+         $('#news_title').val(unescape(decodeURIComponent(escape(res.news[0].title))));
          res.news.forEach(function(news) {
             $('#news_by_category').append('<option value="'+news.id+'">'+unescape(decodeURIComponent(escape(news.title)))+'</option>');
          });
@@ -61,16 +63,30 @@ $(document).ready(function() {
      });
   });
 
-  $('#newsModal').on('hidden.bs.modal', function () {
-      resetModal();
+  // $('#newsModal').on('hidden.bs.modal', function () {
+  //     resetModal();
+  // });
+
+  $('body').click(function (event) {
+     if($(event.target).closest('#newsModal').length && $(event.target).is('#newsModal')) {
+       resetModal();
+    }
   });
 
   $(document).on('click', '#save', function () {
-      let news_by_category = $('#news_by_category').val();
-      $('#news_title').val(news_by_category);
-      $('#news').val(news_by_category);
-      resetModal();
-      $('#newsModal').modal('hide');
+      let news_by_category = $('#news_by_category');
+      //console.log(news_by_category.text());
+      toggleButton();
+      $('#news_title').val(news_by_category.text());
+      $('#news').val(news_by_category.val());
+      $('#category').val('');
+      $('#category_news').addClass('d-none');
+  });
+
+  $(document).on('click', '#deleteBtn', function () {
+      toggleButton();
+      $('#news_title').val('');
+      $('#news').val('');
   });
 
   $(document).on('click', '#close', function () {
@@ -78,10 +94,15 @@ $(document).ready(function() {
   });
 
   function resetModal() {
-    $('#category').val('');
-    $('#category_news').addClass('d-none');
     $('#news_title').val('');
     $('#news').val('');
+    $('#category').val('');
+    $('#category_news').addClass('d-none');
+  }
+
+  function toggleButton() {
+    $('#deleteBtn').toggleClass('d-none');
+    $('#choose').toggleClass('d-none');
   }
 
 });

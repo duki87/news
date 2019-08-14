@@ -451,6 +451,26 @@ header .main-menu li.drop-down a.mouseover + ul.drop-down-menu{ display: block;
 	border-radius: 2px; color: #111; }
 .btn-fill-grey:hover{ border: 1px solid #F9B500; background: none; color: #000; }
 
+.poll-btns {
+	font-weight: bold;
+}
+
+.poll-btns:hover {
+	font-weight: bold;
+	background-color: #F9B500;
+}
+
+.poll-option {
+	font-weight: bold;
+	background-color: rgba(0,0,0,0.02);
+}
+
+.poll-option:hover {
+	background-color: #F9B500;
+	cursor: pointer;
+	color: white;
+}
+
 .like-comment {
 
 }
@@ -1970,4 +1990,22 @@ section{ padding: 50px 0; }
 	.plr-xs-80{ padding-left: 80px!important; padding-right: 80px!important; }
 	.plr-xs-90{ padding-left: 90px!important; padding-right: 90px!important; }
 
+}
+
+.poll-text {
+	font-weight: bold;
+	color: #F9B500;
+}
+
+.bar {
+  width: 1px;
+  height: 40px;
+  background: skyblue;
+  border-radius: 5px;
+  -webkit-transition: width 2s; /* Safari */
+  transition: transform 2s;
+}
+
+.bar:hover {
+  width: 100%;
 }

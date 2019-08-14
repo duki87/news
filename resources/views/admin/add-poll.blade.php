@@ -6,12 +6,24 @@
 
   </div>
   @if(Session::has('session_message'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <strong>ИНФО</strong> {{Session::get('session_message')}}
+    <div class="alert alert-{{Session::get('session_message.alert')}} alert-dismissible fade show" role="alert">
+      <strong>ИНФО</strong>{{Session::get('session_message.content')}}
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
+  @endif
+  @if(count($errors))
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+     <ul class="">
+       @foreach($errors->all() as $error)
+          <li>{{$error}}</li>
+        @endforeach
+     </ul>
+     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+     </button>
+   </div>
   @endif
   <h2 class="d-inline">Додај нову анкету</h2> <a href="{{route('admin.all-polls')}}" type="button" name="button" class="btn btn-primary text-white d-inline float-right mb-2">Погледај све вести</a>
   <br>
@@ -39,9 +51,10 @@
         <input type="text" class="form-control" disabled value="Није одабрана ниједна вест" id="news_title">
         <input type="hidden" id="news" name="news" value="">
       </div>
-      <div class="col-md-1 mb-3">
+      <div class="col-md-1 mb-3" id="btnDiv">
         <label for="news" style="visibility:hidden">sfds</label>
         <button data-toggle="modal" data-target="#newsModal" type="button" name="choose" id="choose" class="text-white btn btn-info">Изаберите вест</button>
+        <button type="button" name="deleteBtn" id="deleteBtn" class="text-white btn btn-danger d-none">Одбаци</button>
       </div>
       <div class="col-md-12 mb-3">
         <label for="description">Опис анкете</label>
@@ -97,7 +110,7 @@
       </div>
       <div class="modal-footer">
         <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal">Затвори</button>
-        <button id="save" type="button" class="btn btn-primary">Изаберите</button>
+        <button id="save" type="button" class="btn btn-primary" data-dismiss="modal">Изаберите</button>
       </div>
     </div>
   </div>

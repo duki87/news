@@ -10,4 +10,8 @@ class Vote extends Model
         'poll', 'user', 'vote',
     ];
 
+    // public function vote() {
+    //   return $this->hasOne('App\PollOption', 'vote');
+    // }
+
 }

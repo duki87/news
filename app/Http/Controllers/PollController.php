@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Poll;
+use App\PollOption;
 use App\News;
 use Illuminate\Http\Request;
 use App\Category;
+use Validator;
+use Illuminate\Support\Facades\Input;
 
 class PollController extends Controller
 {
@@ -27,13 +30,40 @@ class PollController extends Controller
 
     public function store(Request $request)
     {
-        //
+        $validatorArr = array();
+        $validator = Validator::make($request->all(), [
+              'title'     => 'required|max:255',
+              'duration'  => 'required',
+              'poll_options'    => 'required|array|min:2',
+              'poll_options.*'  => 'required|string|distinct|min:2',
+        ]);
+
+        if($validator->fails())
+        {
+            return redirect()
+                    ->back()
+                    ->withErrors($validator)
+                    ->withInput(Input::all());
+        }
+        $poll = new Poll();
+        $poll->title = $request->title;
+        $poll->news = $request->news;
+        $poll->description = $request->description;
+        $poll->duration = $request->duration;
+        $poll->status = 1;
+        if($poll->save())
+        {
+            foreach ($request->poll_options as $option)
+            {
+                  $pollOptions = new PollOption();
+                  $pollOptions->poll = $poll->id;
+                  $pollOptions->option = $option;
+                  $pollOptions->save();
+            }
+            return redirect('/admin/polls')->with(['session_message' => ['alert' => 'success', 'content' => ' Успешно креирана анкета.']]);
+        }
     }
 
-    public function show(Poll $poll)
-    {
-        //
-    }
 
     public function edit(Poll $poll)
     {
